@@ -2,82 +2,118 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <!-- Balise meta pour la réactivité -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quiz : L'IA dans votre quotidien professionnel</title>
+  <!-- Inclusion d'une police Google (Inter, par exemple) pour un style moderne -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* Styles généraux */
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
+    /* Réinitialisation et styles globaux */
+    * {
+      box-sizing: border-box;
       margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      color: #333;
+      padding: 20px;
+      line-height: 1.6;
     }
     .quiz-container {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
-      background: #fff;
-      border: 1px solid #ddd;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     .quiz-container h1 {
       text-align: center;
-      margin-bottom: 30px;
+      font-size: 24px;
+      margin-bottom: 20px;
+      color: #111;
     }
     .question {
       font-size: 20px;
       margin-bottom: 20px;
+      font-weight: 600;
     }
     .options {
       list-style: none;
       padding: 0;
+      margin: 0;
     }
     .options li {
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
     .option-btn {
       width: 100%;
-      padding: 10px;
+      padding: 12px 20px;
       font-size: 16px;
-      border: 1px solid #ccc;
-      background: #f9f9f9;
-      cursor: pointer;
+      border: 1px solid #ddd;
       border-radius: 5px;
+      background: #f1f3f5;
+      color: #333;
+      cursor: pointer;
       transition: background 0.3s, transform 0.3s;
     }
     .option-btn:hover {
-      background: #e9e9e9;
+      background: #e9ecef;
     }
     .option-btn.correct {
-      background: #c8e6c9;
-      border-color: #2e7d32;
+      background: #d4edda;
+      border-color: #28a745;
       animation: correctAnimation 0.5s ease;
     }
     .option-btn.incorrect {
-      background: #ffcdd2;
-      border-color: #c62828;
+      background: #f8d7da;
+      border-color: #dc3545;
     }
     @keyframes correctAnimation {
       0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      50% { transform: scale(1.05); }
       100% { transform: scale(1); }
     }
     .next-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
+      display: block;
+      width: 100%;
+      margin-top: 25px;
+      padding: 12px;
       font-size: 16px;
-      background: #1976d2;
-      color: white;
+      background: #007bff;
+      color: #fff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      text-align: center;
+      transition: background 0.3s;
     }
     .next-btn:hover {
-      background: #1565c0;
+      background: #0069d9;
     }
     .result {
       font-size: 22px;
       text-align: center;
       margin-top: 20px;
+      font-weight: 600;
+      color: #111;
+    }
+    /* Adaptation pour les petits écrans */
+    @media (max-width: 600px) {
+      .quiz-container {
+        padding: 20px;
+      }
+      .quiz-container h1 {
+        font-size: 20px;
+      }
+      .question {
+        font-size: 18px;
+      }
+      .option-btn {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -89,7 +125,7 @@
   </div>
 
   <script>
-    // Tableau des 10 questions "fourbes" adaptées au quotidien professionnel
+    // Tableau des 10 questions "fourbes" adaptées au quotidien (emails, prise de rendez-vous, Excel, etc.)
     const quizData = [
       {
         question: "1. Quel est le principal avantage de l'utilisation de l'IA pour la gestion de vos emails professionnels ?",
@@ -195,17 +231,16 @@
 
     let currentQuestion = 0;
     let score = 0;
-    
     const quizContainer = document.getElementById('quiz');
     const resultContainer = document.getElementById('result');
 
-    // Fonction pour charger et afficher une question
+    // Fonction pour charger une question
     function loadQuestion() {
       quizContainer.innerHTML = '';
       resultContainer.innerHTML = '';
-
+      
       if (currentQuestion >= quizData.length) {
-        // Fin du quiz : affichage du score avec un cadeau ridicule
+        // Affichage du score et du "cadeau ridicule"
         quizContainer.innerHTML = `<h2>Quiz terminé !</h2>
           <p>Vous avez obtenu ${score} sur ${quizData.length}.</p>
           <p style="font-size:18px; margin-top:20px;">
@@ -215,17 +250,14 @@
       }
       
       const questionObj = quizData[currentQuestion];
-      
-      // Affichage de l'énoncé de la question
       const questionElem = document.createElement('div');
       questionElem.className = 'question';
       questionElem.innerText = questionObj.question;
       quizContainer.appendChild(questionElem);
-      
+
       // Création de la liste des options
       const optionsList = document.createElement('ul');
       optionsList.className = 'options';
-      
       questionObj.options.forEach((optionText, index) => {
         const li = document.createElement('li');
         const btn = document.createElement('button');
@@ -235,13 +267,11 @@
         li.appendChild(btn);
         optionsList.appendChild(li);
       });
-      
       quizContainer.appendChild(optionsList);
     }
-    
+
     // Fonction appelée lorsqu'une option est sélectionnée
     function selectOption(selectedIndex, btnElement) {
-      // Désactiver tous les boutons de la question
       const buttons = document.querySelectorAll('.option-btn');
       buttons.forEach(btn => btn.disabled = true);
       
@@ -253,11 +283,9 @@
         score++;
       } else {
         btnElement.classList.add('incorrect');
-        // Mettre en évidence la bonne réponse
         buttons[correctIndex].classList.add('correct');
       }
       
-      // Bouton pour passer à la question suivante ou voir le résultat final
       const nextBtn = document.createElement('button');
       nextBtn.className = 'next-btn';
       nextBtn.innerText = currentQuestion === quizData.length - 1 ? "Voir le résultat" : "Question suivante";
@@ -267,8 +295,8 @@
       });
       quizContainer.appendChild(nextBtn);
     }
-    
-    // Charger la première question dès le chargement de la page
+
+    // Charger la première question au démarrage
     loadQuestion();
   </script>
 </body>
